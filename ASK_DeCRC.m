@@ -9,7 +9,7 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     oldCRC = zeros(1, crc_num);         
 
     % the given CRC checksum in input_data
-    oldCRC = (input_data(1, input_num - crc_num + 1 : input_num));
+    oldCRC_rev = (input_data(1, input_num - crc_num + 1 : input_num));
 
     % generate polynomial
     % gCRC24(D) = D24 + D23 + D6 + D5 + D + 1
@@ -22,11 +22,11 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     % CRC case switch
     switch crc_num
         case 24
-           g = gCRC24;
-       case 16
-           g = gCRC16;
-       case 12
-           g = gCRC12;
+            g = gCRC24;
+        case 16
+            g = gCRC16;
+        case 12
+            g = gCRC12;
     end
 
     % CRC checksum verification
@@ -36,17 +36,19 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
 
     % move raw data(raw) left by the degree of CRC
     % then divide it with generate polynomial(g), get quotient(q) and remainder(r)
+    % q = conv([raw zeros(1, crc_num)], g);
     [q, r] = deconv([raw zeros(1, crc_num)], g);
 
     % extract the ending bits, and mod it by 2 -> CRC checksum
     r_length = length(r);
+    % crcBit = deconv(q, g);
     crcBit = mod(r(1, r_length - crc_num + 1 : r_length), 2);
 
     % turn the calculated remainder around
     crcBit_rev = fliplr(crcBit);
 
     % check if there is any different CRC bit
-    err = bitxor(crcBit_rev, oldCRC)
+    err = bitxor(crcBit_rev, oldCRC_rev)
 
     % if the magnitude of the err vector is larger than zero, the integrity of the data frame is broken
     % CRC_flag -> intact
@@ -57,9 +59,3 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
         CRC_flag = 0;
 
 end
-
-
-
-
-
-
