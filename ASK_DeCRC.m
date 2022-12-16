@@ -29,7 +29,7 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     gCRC12 =                         [1 1 0 0 0 0 0 0 0 1 1 1 1];
     gCRC8  =                                 [1 1 0 0 1 1 0 1 1];
 
-    % CRC case switch
+    % select CRC generator polynomial
     switch crc_num
         case 24
             g = gCRC24;
