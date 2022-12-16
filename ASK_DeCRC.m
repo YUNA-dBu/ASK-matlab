@@ -60,8 +60,8 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     % concatenate the raw message and the actual given CRC checksum
     reg = [raw oldCRC];
 
-    % > Each step the polynomial divisor is aligned with the left-most 1 in the number. 
-    % > Because the result of dividing by the four term polynomial has three bits. 
+    % > Each step the polynomial divisor is aligned with the left-most 1 in the number 
+    % > in general dividing by a polynomial of length n+1 produces a check value of length n  
     for i = 1 : input_num - crc_num
         if (reg(i) > 0)
             reg(i : i + crc_num) = bitxor(reg(i : i + crc_num), g);
