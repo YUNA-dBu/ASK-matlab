@@ -7,9 +7,6 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
 % CRC_flag:   indicates the integrity of dataframe, 1 -> intact / 0 -> compromised
 % out_data:   the raw message in the data
 
-    % length of input_data
-    input_num = length(input_data);
-
     % generator polynomial
     % gCRC24(D) = D24 + D23                                       + D6 + D5                 + D + 1
     % gCRC16(D) =                  D16 + D12                           + D5                     + 1
@@ -36,6 +33,9 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     % Flip the reversed CRC checksum. 
     % Then divide the whole array with the generator polynomial. 
     % The data is intact if and only if the remainder is zero.
+
+    % length of input_data
+    input_num = length(input_data);
 
     % raw data in input_data
     raw = input_data(1 : input_num - crc_num);
