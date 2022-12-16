@@ -7,17 +7,8 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
 % CRC_flag:   indicates the integrity of dataframe, 1 -> intact / 0 -> compromised
 % out_data:   the raw message in the data
 
-
     % length of input_data
     input_num = length(input_data);
-
-    % % 1 x crc_num, row vectors, filled with 0
-    % crcBit = zeros(1, crc_num);
-    % regOut = zeros(1, crc_num);        
-    oldCRC = zeros(1, crc_num);         
-
-    % % the given CRC checksum in input_data
-    % oldCRC_rev = (input_data(1, input_num - crc_num + 1 : input_num));
 
     % generator polynomial
     % gCRC24(D) = D24 + D23                                       + D6 + D5                 + D + 1
@@ -54,9 +45,6 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     oldCRC_rev = input_data(input_num - crc_num : input_num);
     oldCRC     = fliplr(oldCRC_rev);
 
-    % % move raw data(raw) left by the degree of CRC
-    % reg = [raw zeros(1, crc_num)]
-
     % concatenate the raw message and the actual given CRC checksum
     reg = [raw oldCRC];
 
@@ -70,16 +58,6 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     
     % the remainder of the previous calculation 
     remainder = reg(input_num - crc_num + 1 : input_num);
-
-    % % turn the calculated remainder around
-    % crcBit_rev = fliplr(crcBit)
-
-    % % check if there is any different CRC bit
-    % err = bitxor(crcBit_rev, oldCRC_rev)
-
-    % The remainder is expected to be zero. 
-    % If the magnitude of the `remainder` vector is larger than zero, 
-    % then the integrity of the data frame is broken. 
 
     % CRC_flag -> intact
     % !CRC_flag -> compromised
