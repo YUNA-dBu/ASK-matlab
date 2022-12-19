@@ -42,7 +42,7 @@ function [CRC_flag,out_data] = ASK_DeCRC(input_data, crc_num)
     out_data = raw;
 
     % the CRC checksum appended in the data is flipped
-    oldCRC_rev = input_data(input_num - crc_num : input_num);
+    oldCRC_rev = input_data(input_num - crc_num + 1 : input_num);
     oldCRC     = fliplr(oldCRC_rev);
 
     % concatenate the raw message and the actual given CRC checksum
